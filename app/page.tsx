@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 type Equipment = {
@@ -44,9 +45,12 @@ export default async function Home() {
           />
 
           <div className="flex gap-2">
-            <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">
-              장비 추가
-            </button>
+            <Link
+            href="/equipment/new"
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+            >
+            장비 추가
+            </Link>
             <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg">
               엑셀 다운로드
             </button>
