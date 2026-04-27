@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import DeleteButton from "./equipment/DeleteButton";
 
 type Equipment = {
   id: string;
@@ -71,6 +72,7 @@ export default async function Home() {
                 <th className="px-4 py-3 text-left">상태</th>
                 <th className="px-4 py-3 text-left">위치</th>
                 <th className="px-4 py-3 text-left">담당자</th>
+                <th className="px-4 py-3 text-left">관리</th>
               </tr>
             </thead>
 
@@ -106,13 +108,16 @@ export default async function Home() {
 
                   <td className="px-4 py-3">{item.location}</td>
                   <td className="px-4 py-3">{item.manager}</td>
+                  <td className="px-4 py-3">
+                  <DeleteButton id={item.id} name={item.name} />
+                </td>
                 </tr>
               ))}
 
               {equipmentList.length === 0 && (
                 <tr>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     className="px-4 py-10 text-center text-gray-500"
                   >
                     데이터가 없습니다

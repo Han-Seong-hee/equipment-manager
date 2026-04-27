@@ -40,3 +40,22 @@ export async function addEquipment(formData: FormData) {
 
   redirect("/");
 }
+
+export async function deleteEquipment(formData: FormData) {
+  const id = String(formData.get("id") || "");
+
+  if (!id) {
+    throw new Error("삭제할 장비 ID가 없습니다.");
+  }
+
+  const { error } = await supabase
+    .from("equipment")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  redirect("/");
+}
