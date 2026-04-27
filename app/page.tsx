@@ -45,11 +45,23 @@ type Equipment = {
   created_at: string;
 };
 
-export default async function Home() {
-  const { data, error } = await supabase
-    .from("equipment")
-    .select("*")
-    .order("no", { ascending: true });
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const params = await searchParams;
+  const selectedCategory = params.category;
+  let query = supabase
+  .from("equipment")
+  .select("*")
+  .order("no", { ascending: true });
+
+if (selectedCategory) {
+  query = query.eq("category", selectedCategory);
+}
+
+const { data, error } = await query;
     console.log("SUPABASE DATA:", data);
     console.log("SUPABASE ERROR:", error);
 
@@ -88,35 +100,76 @@ const fwCount = equipmentList.filter(
   (item) => item.category === "FW"
 ).length;
 
+const menuItems = [
+  { label: "전체", value: "" },
+  { label: "Server", value: "Server" },
+  { label: "Storage", value: "Storage" },
+  { label: "L2", value: "L2" },
+  { label: "L3", value: "L3" },
+  { label: "L4", value: "L4" },
+  { label: "FW", value: "FW" },
+];
+
   return (
-    <main className="min-h-screen bg-gray-950 p-6 text-gray-200">
-      <div className="mx-auto max-w-[1800px]">
+    <main className="min-h-screen bg-gray-950 text-gray-200">
+    <div className="flex min-h-screen">
+      <aside className="w-56 border-r border-gray-800 bg-gray-900 p-5">
+        <h2 className="mb-6 text-lg font-bold text-white">장비 분류</h2>
+
+        <nav className="space-y-2">
+          {menuItems.map((menu) => {
+            const href = menu.value ? `/?category=${menu.value}` : "/";
+            const active =
+              (!selectedCategory && menu.value === "") ||
+              selectedCategory === menu.value;
+
+            return (
+              <Link
+                key={menu.label}
+                href={href}
+                className={`block rounded-lg px-4 py-3 text-sm ${
+                  active
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                }`}
+              >
+                {menu.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      <section className="flex-1 p-6">
+        <div className="mx-auto max-w-[1800px]">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white">장비 관리 시스템</h1>
           <p className="mt-2 text-gray-400">
-            서버, 스토리지, 네트워크 장비 자산 정보를 통합 관리합니다.
+            {selectedCategory
+            ? `${selectedCategory} 장비 목록을 표시합니다.`
+            : "전체 장비 목록을 표시합니다."}
           </p>
         </div>
 
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-          <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
-            <p className="text-sm text-gray-500">전체 장비</p>
-            <p className="mt-2 text-2xl font-bold text-white">
-              {equipmentList.length}
-            </p>
-          </div>
+        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-7">
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
+          <p className="text-sm text-gray-500">전체 장비</p>
+          <p className="mt-2 text-2xl font-bold text-white">
+            {equipmentList.length}
+          </p>
+        </div>
 
         <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
-        <p className="text-sm text-gray-500">Server</p>
-        <p className="mt-2 text-2xl font-bold text-white">{serverCount}</p>
-      </div>
+          <p className="text-sm text-gray-500">Server</p>
+          <p className="mt-2 text-2xl font-bold text-white">{serverCount}</p>
+        </div>
 
-      <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
-        <p className="text-sm text-gray-500">Storage</p>
-        <p className="mt-2 text-2xl font-bold text-white">{storageCount}</p>
-      </div>
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
+          <p className="text-sm text-gray-500">Storage</p>
+          <p className="mt-2 text-2xl font-bold text-white">{storageCount}</p>
+        </div>
 
-         <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
           <p className="text-sm text-gray-500">L2</p>
           <p className="mt-2 text-2xl font-bold text-white">{l2Count}</p>
         </div>
@@ -283,6 +336,8 @@ const fwCount = equipmentList.filter(
           컬럼이 많아 좌우 스크롤로 전체 항목을 확인할 수 있습니다.
         </p>
       </div>
-    </main>
+    </section>
+  </div>
+</main>
   );
 }
