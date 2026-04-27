@@ -1,3 +1,8 @@
+"use server";
+
+import { supabase } from "@/lib/supabase";
+import { redirect } from "next/navigation";
+
 export async function addEquipment(formData: FormData) {
   const noValue = formData.get("no");
 
