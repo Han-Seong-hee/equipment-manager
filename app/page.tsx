@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import DeleteButton from "./equipment/DeleteButton";
+import AddEquipmentModal from "./equipment/AddEquipmentModal";
 
 type Equipment = {
   id: string;
@@ -144,12 +145,7 @@ const fwCount = equipmentList.filter(
           />
 
           <div className="flex gap-2">
-            <Link
-              href="/equipment/new"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-            >
-              장비 추가
-            </Link>
+            <AddEquipmentModal />
 
             <button className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
               엑셀 다운로드
