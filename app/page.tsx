@@ -2,7 +2,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import DeleteButton from "./equipment/DeleteButton";
 
-type equipment = {
+type Equipment = {
   id: string;
   no: number | null;
   location: string | null;
