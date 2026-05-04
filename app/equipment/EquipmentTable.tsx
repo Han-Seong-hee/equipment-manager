@@ -3,6 +3,8 @@
 import { useState } from "react";
 import DeleteSelectedButton from "./DeleteSelectedButton";
 import AddEquipmentModal from "./AddEquipmentModal";
+import EditEquipmentModal from "./EditEquipmentModal";
+import ExcelDownloadButton from "./ExcelDownloadButton";
 
 type Equipment = {
   id: string;
@@ -45,6 +47,22 @@ type Equipment = {
   note: string | null;
 };
 
+function calculateUptime(lastBoot: string | null) {
+  if (!lastBoot) return "-";
+
+  const bootDate = new Date(lastBoot);
+  const today = new Date();
+
+  if (Number.isNaN(bootDate.getTime())) return "-";
+
+  const diffMs = today.getTime() - bootDate.getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days < 0) return "미래";
+
+  return `${days}일`;
+}
+
 export default function EquipmentTable({
   equipmentList,
 }: {
@@ -52,33 +70,66 @@ export default function EquipmentTable({
 }) {
   const [selectedId, setSelectedId] = useState("");
   const [selectedName, setSelectedName] = useState("");
+  const [selectedItem, setSelectedItem] = useState<Equipment | null>(null);
+  const [searchText, setSearchText] = useState("");
+
+  const filteredList = equipmentList.filter((item) => {
+    const keyword = searchText.trim().toLowerCase();
+
+    if (!keyword) return true;
+
+    return (
+      (item.no?.toString() ?? "").includes(keyword) ||
+      (item.location ?? "").toLowerCase().includes(keyword) ||
+      (item.rack ?? "").toLowerCase().includes(keyword) ||
+      (item.network_center ?? "").toLowerCase().includes(keyword) ||
+      (item.operation_team ?? "").toLowerCase().includes(keyword) ||
+      (item.manager ?? "").toLowerCase().includes(keyword) ||
+      (item.category ?? "").toLowerCase().includes(keyword) ||
+      (item.type ?? "").toLowerCase().includes(keyword) ||
+      (item.vendor ?? "").toLowerCase().includes(keyword) ||
+      (item.bp ?? "").toLowerCase().includes(keyword) ||
+      (item.model ?? "").toLowerCase().includes(keyword) ||
+      (item.serial_number ?? "").toLowerCase().includes(keyword) ||
+      (item.hostname ?? "").toLowerCase().includes(keyword) ||
+      (item.ip_address ?? "").toLowerCase().includes(keyword) ||
+      (item.gateway ?? "").toLowerCase().includes(keyword) ||
+      (item.os_version ?? "").toLowerCase().includes(keyword) ||
+      (item.status ?? "").toLowerCase().includes(keyword) ||
+      (item.asset_number ?? "").toLowerCase().includes(keyword) ||
+      (item.ssr_asset_number ?? "").toLowerCase().includes(keyword) ||
+      (item.note ?? "").toLowerCase().includes(keyword)
+    );
+  });
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <input
           type="text"
-          placeholder="Hostname / IP / S/N 검색"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder="Hostname / IP / S/N / 기종 / 분류 / 상태 검색"
           className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-gray-200 placeholder-gray-500 focus:border-blue-500 focus:outline-none md:w-96"
         />
 
         <div className="flex gap-2">
           <AddEquipmentModal />
 
+          <EditEquipmentModal selectedItem={selectedItem} />
+
           <DeleteSelectedButton
             selectedId={selectedId}
             selectedName={selectedName}
           />
 
-          <button className="cursor-pointer rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
-            엑셀 다운로드
-          </button>
+          <ExcelDownloadButton equipmentList={filteredList} />
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-800 bg-gray-900 shadow-lg">
+      <div className="min-h-0 flex-1 overflow-auto rounded-xl border border-gray-800 bg-gray-900 shadow-lg">
         <table className="min-w-[3600px] border-collapse text-sm">
-          <thead className="bg-gray-800 text-gray-300">
+          <thead className="sticky top-0 z-10 bg-gray-800 text-gray-300">
             <tr>
               <th className="px-3 py-3 text-left">No</th>
               <th className="px-3 py-3 text-left">위치</th>
@@ -121,7 +172,7 @@ export default function EquipmentTable({
           </thead>
 
           <tbody>
-            {equipmentList.map((item) => {
+            {filteredList.map((item) => {
               const name = item.hostname || item.ip_address || "장비";
               const selected = selectedId === item.id;
 
@@ -131,6 +182,7 @@ export default function EquipmentTable({
                   onClick={() => {
                     setSelectedId(item.id);
                     setSelectedName(name);
+                    setSelectedItem(item);
                   }}
                   className={`cursor-pointer border-b border-gray-800 ${
                     selected ? "bg-blue-900/40" : "hover:bg-gray-800"
@@ -148,8 +200,12 @@ export default function EquipmentTable({
                   <td className="px-3 py-3">{item.bp}</td>
                   <td className="px-3 py-3">{item.model}</td>
                   <td className="px-3 py-3">{item.serial_number}</td>
-                  <td className="px-3 py-3 font-medium text-white">{item.hostname}</td>
-                  <td className="px-3 py-3 text-blue-300">{item.ip_address}</td>
+                  <td className="px-3 py-3 font-medium text-white">
+                    {item.hostname}
+                  </td>
+                  <td className="px-3 py-3 text-blue-300">
+                    {item.ip_address}
+                  </td>
                   <td className="px-3 py-3">{item.gateway}</td>
                   <td className="px-3 py-3">{item.os_version}</td>
                   <td className="px-3 py-3">{item.bios_version}</td>
@@ -180,7 +236,9 @@ export default function EquipmentTable({
                   <td className="px-3 py-3">{item.hw_manage_type}</td>
                   <td className="px-3 py-3">{item.os_manage_type}</td>
                   <td className="px-3 py-3">{item.warranty_out}</td>
-                  <td className="px-3 py-3">{item.uptime}</td>
+                  <td className="px-3 py-3">
+                    {calculateUptime(item.last_boot)}
+                  </td>
                   <td className="px-3 py-3">{item.last_boot}</td>
                   <td className="px-3 py-3">{item.hw_eos}</td>
                   <td className="px-3 py-3">{item.unused}</td>
@@ -191,16 +249,16 @@ export default function EquipmentTable({
               );
             })}
 
-            {equipmentList.length === 0 && (
+            {filteredList.length === 0 && (
               <tr>
                 <td colSpan={37} className="px-4 py-10 text-center text-gray-500">
-                  등록된 장비가 없습니다.
+                  검색 결과가 없습니다.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

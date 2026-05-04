@@ -77,6 +77,28 @@ export default function AddEquipmentModal() {
                   <label className={labelClass}>분류</label>
                   <select name="category" className={inputClass}>
                     <option value="">선택</option>
+                    <option value="BB_NMS">BB_NMS</option>
+                    <option value="BMS">BMS</option>
+                    <option value="IPAS">IPAS</option>
+                    <option value="FACT">FACT</option>
+                    <option value="Finder">Finder</option>
+                    <option value="FlowNMS">FlowNMS</option>
+                    <option value="FOMS">FOMS</option>
+                    <option value="FOMS_DR">FOMS_DR</option>
+                    <option value="PODS">PODS</option>
+                    <option value="RMS">RMS</option>
+                    <option value="RMS_DR">RMS_DR</option>
+                    <option value="SuMS">SuMS</option>
+                    <option value="TACT">TACT</option>
+                    <option value="TEAMS">TEAMS</option>
+                    <option value="가입자단말NTP">가입자단말NTP</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>종류</label>
+                  <select name="category" className={inputClass}>
+                    <option value="">선택</option>
                     <option value="Server">Server</option>
                     <option value="Storage">Storage</option>
                     <option value="L2">L2</option>
@@ -87,13 +109,19 @@ export default function AddEquipmentModal() {
                 </div>
 
                 <div>
-                  <label className={labelClass}>종류</label>
-                  <input name="type" className={inputClass} />
-                </div>
-
-                <div>
                   <label className={labelClass}>Vender</label>
-                  <input name="vendor" className={inputClass} />
+                  <select name="vendor" className={inputClass}>
+                    <option value="">선택</option>
+                    <option value="Cisco">Cisco</option>
+                    <option value="Dell">Dell</option>
+                    <option value="Fortinet">Fortinet</option>
+                    <option value="Fujitsu">Fujitsu</option>
+                    <option value="HP">HP</option>
+                    <option value="Juniper">Juniper</option>
+                    <option value="Lenovo">Lenovo</option>
+                    <option value="NetAPP">NetApp</option>
+                    <option value="Supermicro">Supermicro</option>
+                  </select>
                 </div>
 
                 <div>
@@ -189,37 +217,58 @@ export default function AddEquipmentModal() {
                   <label className={labelClass}>상태</label>
                   <select name="status" className={inputClass}>
                     <option value="">선택</option>
-                    <option value="운영">운영</option>
-                    <option value="점검">점검</option>
-                    <option value="장애">장애</option>
+                    <option value="불용대상">불용대상</option>
+                    <option value="비운용">비운용</option>
                     <option value="예비">예비</option>
-                    <option value="폐기">폐기</option>
+                    <option value="운용">운용</option>
                   </select>
                 </div>
 
                 <div>
                   <label className={labelClass}>HW 관리구분</label>
-                  <input name="hw_manage_type" className={inputClass} />
+                  <select name="hw_manage_type" className={inputClass}>
+                    <option value="">선택</option>
+                    <option value="NOT">NOT</option>
+                    <option value="MA">MA</option>
+                    <option value="Wth">Wty</option>
+                  </select>
                 </div>
 
                 <div>
                   <label className={labelClass}>OS 관리구분</label>
-                  <input name="os_manage_type" className={inputClass} />
+                  <select name="os_manage_type" className={inputClass}>
+                    <option value="">선택</option>
+                    <option value="NOT">NOT</option>
+                    <option value="MA">MA</option>
+                    <option value="Wth">Wty</option>
+                  </select>
                 </div>
 
                 <div>
                   <label className={labelClass}>Wty Out</label>
-                  <input name="warranty_out" className={inputClass} />
+                  <input
+                    name="warranty_out"
+                    className={inputClass}
+                    placeholder="예: 2026-01-01"
+                  />
                 </div>
 
                 <div>
                   <label className={labelClass}>uptime</label>
-                  <input name="uptime" className={inputClass} />
+                  <input
+                    disabled
+                    className={inputClass}
+                    placeholder="Last Boot 입렷 시 자동 계산"
+                  />
                 </div>
 
                 <div>
                   <label className={labelClass}>Last Boot</label>
-                  <input name="last_boot" className={inputClass} />
+                  <input
+                    name="last_boot"
+                    className={inputClass}
+                    placeholder="예: 2026-01-01"
+                  />
                 </div>
 
                 <div>

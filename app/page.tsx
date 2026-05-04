@@ -123,7 +123,7 @@ export default async function Home({
   ];
 
   return (
-    <main className="min-h-screen bg-gray-950 text-gray-200">
+    <main className="h-screen overflow-hidden bg-gray-950 text-gray-200">
       <div className="flex min-h-screen">
         <aside className="sticky left-0 top-0 h-screen w-40 shrink-0 border-r border-gray-800 bg-gray-900 p-5">
           <h2 className="mb-6 text-lg font-bold text-white">장비 분류</h2>
@@ -152,9 +152,9 @@ export default async function Home({
           </nav>
         </aside>
 
-        <section className="min-w-0 flex-1 p-6">
-          <div className="mx-auto max-w-[1800px]">
-            <div className="mb-8 flex items-center justify-between">
+        <section className="flex h-screen min-w-0 flex-1 flex-col p-6">
+          <div className="flex min-h-0 w-full max-w-none flex-1 flex-col">
+            <div className="mb-1 flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-white">장비 관리 시스템</h1>
                 <p className="mt-2 text-gray-400">
@@ -179,8 +179,8 @@ export default async function Home({
 
             <EquipmentTable equipmentList={equipmentList} />
 
-            <p className="mt-4 text-sm text-gray-500">
-              행을 클릭하면 선택됩니다. 선택 후 장비 삭제 버튼으로 삭제할 수 있습니다.
+            <p className="mt-4 text-sm text-gray-100">
+              행 클릭 시 장비 수정/삭제 가능합니다.
             </p>
           </div>
         </section>
@@ -191,7 +191,7 @@ export default async function Home({
 
 function Card({ title, value }: { title: string; value: number }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow">
+    <div className="rounded-xl border border-gray-800 bg-gray-900 p-2 shadow">
       <p className="text-sm text-gray-500">{title}</p>
       <p className="mt-2 text-2xl font-bold text-white">{value}</p>
     </div>
