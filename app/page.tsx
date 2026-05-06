@@ -1,5 +1,4 @@
 import Link from "next/link";
-import AddEquipmentModal from "./equipment/AddEquipmentModal";
 import EquipmentTable from "./equipment/EquipmentTable";
 
 import { createServerClient } from "@supabase/ssr";
@@ -83,16 +82,15 @@ export default async function Home({
     redirect("/login");
   }
 
-  let query = supabase
-    .from("equipment")
-    .select("*")
-    .order("no", { ascending: true });
+  const encryptionKey = process.env.EQUIPMENT_ENCRYPTION_KEY;
 
-  if (selectedCategory) {
-    query = query.eq("category", selectedCategory);
+  if (!encryptionKey) {
+    throw new Error("EQUIPMENT_ENCRYPTION_KEY가 설정되지 않았습니다.");
   }
 
-  const { data, error } = await query;
+  const { data, error } = await supabase.rpc("get_equipment_decrypted", {
+    p_key: encryptionKey,
+  });
 
   if (error) {
     return (
@@ -103,10 +101,24 @@ export default async function Home({
     );
   }
 
-  const equipmentList = (data ?? []) as Equipment[];
+  let equipmentList = (data ?? []) as Equipment[];
 
-  const serverCount = equipmentList.filter((item) => item.category === "Server").length;
-  const storageCount = equipmentList.filter((item) => item.category === "Storage").length;
+  if (selectedCategory) {
+    equipmentList = equipmentList.filter(
+      (item) => item.category === selectedCategory
+    );
+  }
+
+  equipmentList = equipmentList.sort((a, b) => (a.no ?? 0) - (b.no ?? 0));
+
+  const serverCount = equipmentList.filter(
+    (item) => item.category === "Server"
+  ).length;
+
+  const storageCount = equipmentList.filter(
+    (item) => item.category === "Storage"
+  ).length;
+
   const l2Count = equipmentList.filter((item) => item.category === "L2").length;
   const l3Count = equipmentList.filter((item) => item.category === "L3").length;
   const l4Count = equipmentList.filter((item) => item.category === "L4").length;
@@ -156,7 +168,9 @@ export default async function Home({
           <div className="flex min-h-0 w-full max-w-none flex-1 flex-col">
             <div className="mb-1 flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-white">장비 관리 시스템</h1>
+                <h1 className="text-3xl font-bold text-white">
+                  장비 관리 시스템
+                </h1>
                 <p className="mt-2 text-gray-400">
                   {selectedCategory
                     ? `${selectedCategory} 장비 목록을 표시합니다.`
