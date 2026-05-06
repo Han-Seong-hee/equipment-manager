@@ -109,7 +109,7 @@ export default async function Home({
     );
   }
 
-  equipmentList = equipmentList.sort((a, b) => (a.no ?? 0) - (b.no ?? 0));
+  equipmentList = equipmentList.sort((a, b) => (a.no ?? 999999) - (b.no ?? 999999));
 
   const serverCount = equipmentList.filter(
     (item) => item.category === "Server"

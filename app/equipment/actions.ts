@@ -33,64 +33,78 @@ async function createSupabaseServerClient() {
   );
 }
 
+function getString(formData: FormData, name: string) {
+  return String(formData.get(name) || "");
+}
+
+function getNumberOrNull(formData: FormData, name: string) {
+  const value = formData.get(name);
+
+  if (!value) {
+    return null;
+  }
+
+  const numberValue = Number(value);
+
+  if (Number.isNaN(numberValue)) {
+    return null;
+  }
+
+  return numberValue;
+}
+
 export async function addEquipment(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const encryptionKey = getEncryptionKey();
 
-  const noValue = formData.get("no");
+  const { error } = await supabase.rpc("insert_equipment_encrypted", {
+    p_key: encryptionKey,
 
-  const { error } = await supabase.rpc(
-    "insert_equipment_encrypted",
-    {
-      p_key: encryptionKey,
+    // No 자동 증가는 Supabase SQL 함수에서 처리합니다.
+    // Add 화면에서 no를 입력하지 않으면 null 전달 → SQL 함수에서 nextval 처리
+    p_no: getNumberOrNull(formData, "no"),
 
-      p_no: noValue ? Number(noValue) : null,
+    p_location: getString(formData, "location"),
+    p_rack: getString(formData, "rack"),
+    p_network_center: getString(formData, "network_center"),
+    p_operation_team: getString(formData, "operation_team"),
+    p_manager: getString(formData, "manager"),
 
-      p_location: String(formData.get("location") || ""),
-      p_rack: String(formData.get("rack") || ""),
-      p_network_center: String(formData.get("network_center") || ""),
-      p_operation_team: String(formData.get("operation_team") || ""),
-      p_manager: String(formData.get("manager") || ""),
+    p_category: getString(formData, "category"),
+    p_type: getString(formData, "type"),
+    p_vendor: getString(formData, "vendor"),
+    p_bp: getString(formData, "bp"),
+    p_model: getString(formData, "model"),
 
-      p_category: String(formData.get("category") || ""),
-      p_type: String(formData.get("type") || ""),
-      p_vendor: String(formData.get("vendor") || ""),
-      p_bp: String(formData.get("bp") || ""),
-      p_model: String(formData.get("model") || ""),
+    p_serial_number: getString(formData, "serial_number"),
+    p_hostname: getString(formData, "hostname"),
+    p_ip_address: getString(formData, "ip_address"),
+    p_gateway: getString(formData, "gateway"),
 
-      p_serial_number: String(formData.get("serial_number") || ""),
+    p_os_version: getString(formData, "os_version"),
+    p_bios_version: getString(formData, "bios_version"),
+    p_cpu_model: getString(formData, "cpu_model"),
+    p_cpu_socket: getString(formData, "cpu_socket"),
+    p_cpu_core: getString(formData, "cpu_core"),
+    p_memory: getString(formData, "memory"),
+    p_disk: getString(formData, "disk"),
+    p_etc: getString(formData, "etc"),
 
-      p_hostname: String(formData.get("hostname") || ""),
+    p_asset_number: getString(formData, "asset_number"),
+    p_ssr_asset_number: getString(formData, "ssr_asset_number"),
 
-      p_ip_address: String(formData.get("ip_address") || ""),
-
-      p_gateway: String(formData.get("gateway") || ""),
-
-      p_os_version: String(formData.get("os_version") || ""),
-      p_bios_version: String(formData.get("bios_version") || ""),
-      p_cpu_model: String(formData.get("cpu_model") || ""),
-      p_cpu_socket: String(formData.get("cpu_socket") || ""),
-      p_cpu_core: String(formData.get("cpu_core") || ""),
-      p_memory: String(formData.get("memory") || ""),
-      p_disk: String(formData.get("disk") || ""),
-      p_etc: String(formData.get("etc") || ""),
-
-      p_asset_number: String(formData.get("asset_number") || ""),
-
-      p_ssr_asset_number: String(formData.get("ssr_asset_number") || ""),
-      p_edr_installed: String(formData.get("edr_installed") || ""),
-      p_status: String(formData.get("status") || ""),
-      p_hw_manage_type: String(formData.get("hw_manage_type") || ""),
-      p_os_manage_type: String(formData.get("os_manage_type") || ""),
-      p_warranty_out: String(formData.get("warranty_out") || ""),
-      p_last_boot: String(formData.get("last_boot") || ""),
-      p_hw_eos: String(formData.get("hw_eos") || ""),
-      p_unused: String(formData.get("unused") || ""),
-      p_nic_connected: String(formData.get("nic_connected") || ""),
-      p_power: String(formData.get("power") || ""),
-      p_note: String(formData.get("note") || ""),
-    }
-  );
+    p_edr_installed: getString(formData, "edr_installed"),
+    p_status: getString(formData, "status"),
+    p_hw_manage_type: getString(formData, "hw_manage_type"),
+    p_os_manage_type: getString(formData, "os_manage_type"),
+    p_warranty_out: getString(formData, "warranty_out"),
+    p_last_boot: getString(formData, "last_boot"),
+    p_hw_eos: getString(formData, "hw_eos"),
+    p_unused: getString(formData, "unused"),
+    p_nic_connected: getString(formData, "nic_connected"),
+    p_power: getString(formData, "power"),
+    p_note: getString(formData, "note"),
+  });
 
   if (error) {
     throw new Error(error.message);
@@ -101,16 +115,14 @@ export async function addEquipment(formData: FormData) {
 
 export async function deleteEquipment(formData: FormData) {
   const supabase = await createSupabaseServerClient();
-  const id = String(formData.get("id") || "");
+
+  const id = getString(formData, "id");
 
   if (!id) {
     throw new Error("삭제할 장비 ID가 없습니다.");
   }
 
-  const { error } = await supabase
-    .from("equipment")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("equipment").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -123,67 +135,60 @@ export async function updateEquipment(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const encryptionKey = getEncryptionKey();
 
-  const id = String(formData.get("id") || "");
+  const id = getString(formData, "id");
 
   if (!id) {
     throw new Error("장비 ID가 없습니다.");
   }
 
-  const noValue = formData.get("no");
+  const { error } = await supabase.rpc("update_equipment_encrypted", {
+    p_key: encryptionKey,
+    p_id: id,
 
-  const { error } = await supabase.rpc(
-    "update_equipment_encrypted",
-    {
-      p_key: encryptionKey,
-      p_id: id,
+    // 수정 화면에서는 기존 No를 유지하거나 사용자가 변경한 값을 저장합니다.
+    p_no: getNumberOrNull(formData, "no"),
 
-      p_no: noValue ? Number(noValue) : null,
+    p_location: getString(formData, "location"),
+    p_rack: getString(formData, "rack"),
+    p_network_center: getString(formData, "network_center"),
+    p_operation_team: getString(formData, "operation_team"),
+    p_manager: getString(formData, "manager"),
 
-      p_location: String(formData.get("location") || ""),
-      p_rack: String(formData.get("rack") || ""),
-      p_network_center: String(formData.get("network_center") || ""),
-      p_operation_team: String(formData.get("operation_team") || ""),
-      p_manager: String(formData.get("manager") || ""),
+    p_category: getString(formData, "category"),
+    p_type: getString(formData, "type"),
+    p_vendor: getString(formData, "vendor"),
+    p_bp: getString(formData, "bp"),
+    p_model: getString(formData, "model"),
 
-      p_category: String(formData.get("category") || ""),
-      p_type: String(formData.get("type") || ""),
-      p_vendor: String(formData.get("vendor") || ""),
-      p_bp: String(formData.get("bp") || ""),
-      p_model: String(formData.get("model") || ""),
+    p_serial_number: getString(formData, "serial_number"),
+    p_hostname: getString(formData, "hostname"),
+    p_ip_address: getString(formData, "ip_address"),
+    p_gateway: getString(formData, "gateway"),
 
-      p_serial_number: String(formData.get("serial_number") || ""),
+    p_os_version: getString(formData, "os_version"),
+    p_bios_version: getString(formData, "bios_version"),
+    p_cpu_model: getString(formData, "cpu_model"),
+    p_cpu_socket: getString(formData, "cpu_socket"),
+    p_cpu_core: getString(formData, "cpu_core"),
+    p_memory: getString(formData, "memory"),
+    p_disk: getString(formData, "disk"),
+    p_etc: getString(formData, "etc"),
 
-      p_hostname: String(formData.get("hostname") || ""),
+    p_asset_number: getString(formData, "asset_number"),
+    p_ssr_asset_number: getString(formData, "ssr_asset_number"),
 
-      p_ip_address: String(formData.get("ip_address") || ""),
-
-      p_gateway: String(formData.get("gateway") || ""),
-
-      p_os_version: String(formData.get("os_version") || ""),
-      p_bios_version: String(formData.get("bios_version") || ""),
-      p_cpu_model: String(formData.get("cpu_model") || ""),
-      p_cpu_socket: String(formData.get("cpu_socket") || ""),
-      p_cpu_core: String(formData.get("cpu_core") || ""),
-      p_memory: String(formData.get("memory") || ""),
-      p_disk: String(formData.get("disk") || ""),
-      p_etc: String(formData.get("etc") || ""),
-
-      p_asset_number: String(formData.get("asset_number") || ""),
-
-      p_ssr_asset_number: String(formData.get("ssr_asset_number") || ""),
-      p_edr_installed: String(formData.get("edr_installed") || ""),
-      p_status: String(formData.get("status") || ""),
-      p_hw_manage_type: String(formData.get("hw_manage_type") || ""),
-      p_os_manage_type: String(formData.get("os_manage_type") || ""),
-      p_warranty_out: String(formData.get("warranty_out") || ""),
-      p_last_boot: String(formData.get("last_boot") || ""),
-      p_hw_eos: String(formData.get("hw_eos") || ""),
-      p_unused: String(formData.get("unused") || ""),
-      p_nic_connected: String(formData.get("nic_connected") || ""),
-      p_power: String(formData.get("power") || ""),
-      p_note: String(formData.get("note") || ""),
-    }
-  );
+    p_edr_installed: getString(formData, "edr_installed"),
+    p_status: getString(formData, "status"),
+    p_hw_manage_type: getString(formData, "hw_manage_type"),
+    p_os_manage_type: getString(formData, "os_manage_type"),
+    p_warranty_out: getString(formData, "warranty_out"),
+    p_last_boot: getString(formData, "last_boot"),
+    p_hw_eos: getString(formData, "hw_eos"),
+    p_unused: getString(formData, "unused"),
+    p_nic_connected: getString(formData, "nic_connected"),
+    p_power: getString(formData, "power"),
+    p_note: getString(formData, "note"),
+  });
 
   if (error) {
     throw new Error(error.message);
