@@ -10,42 +10,11 @@ import LogoutButton from "./equipment/LogoutButton";
 type Equipment = {
   id: string;
   no: number | null;
-  location: string | null;
-  rack: string | null;
-  network_center: string | null;
-  operation_team: string | null;
-  manager: string | null;
   category: string | null;
-  type: string | null;
-  vendor: string | null;
-  bp: string | null;
-  model: string | null;
-  serial_number: string | null;
   hostname: string | null;
   ip_address: string | null;
-  gateway: string | null;
-  os_version: string | null;
-  bios_version: string | null;
-  cpu_model: string | null;
-  cpu_socket: string | null;
-  cpu_core: string | null;
-  memory: string | null;
-  disk: string | null;
-  etc: string | null;
-  asset_number: string | null;
-  ssr_asset_number: string | null;
-  edr_installed: string | null;
   status: string | null;
-  hw_manage_type: string | null;
-  os_manage_type: string | null;
-  warranty_out: string | null;
-  uptime: string | null;
   last_boot: string | null;
-  hw_eos: string | null;
-  unused: string | null;
-  nic_connected: string | null;
-  power: string | null;
-  note: string | null;
   created_at: string;
 };
 
@@ -67,9 +36,7 @@ export default async function Home({
         getAll() {
           return cookieStore.getAll();
         },
-        setAll() {
-          // Server Component에서는 쿠키 설정 불필요
-        },
+        setAll() {},
       },
     }
   );
@@ -109,20 +76,9 @@ export default async function Home({
     );
   }
 
-  equipmentList = equipmentList.sort((a, b) => (a.no ?? 999999) - (b.no ?? 999999));
-
-  const serverCount = equipmentList.filter(
-    (item) => item.category === "Server"
-  ).length;
-
-  const storageCount = equipmentList.filter(
-    (item) => item.category === "Storage"
-  ).length;
-
-  const l2Count = equipmentList.filter((item) => item.category === "L2").length;
-  const l3Count = equipmentList.filter((item) => item.category === "L3").length;
-  const l4Count = equipmentList.filter((item) => item.category === "L4").length;
-  const fwCount = equipmentList.filter((item) => item.category === "FW").length;
+  equipmentList = equipmentList.sort(
+    (a, b) => (a.no ?? 999999) - (b.no ?? 999999)
+  );
 
   const menuItems = [
     { label: "전체", value: "" },
@@ -135,12 +91,12 @@ export default async function Home({
   ];
 
   return (
-    <main className="h-screen overflow-hidden bg-gray-950 text-gray-200">
-      <div className="flex min-h-screen">
-        <aside className="sticky left-0 top-0 h-screen w-40 shrink-0 border-r border-gray-800 bg-gray-900 p-5">
-          <h2 className="mb-6 text-lg font-bold text-white">장비 분류</h2>
+    <main className="min-h-screen bg-gray-950 text-gray-200 md:h-screen md:overflow-hidden">
+      <div className="flex min-h-screen flex-col md:flex-row">
+        <aside className="w-full shrink-0 border-b border-gray-800 bg-gray-900 p-3 md:sticky md:left-0 md:top-0 md:h-screen md:w-40 md:border-b-0 md:border-r md:p-5">
+          <h2 className="mb-4 text-lg font-bold text-white">장비 분류</h2>
 
-          <nav className="space-y-2">
+          <nav className="flex gap-2 overflow-x-auto md:block md:space-y-2">
             {menuItems.map((menu) => {
               const href = menu.value ? `/?category=${menu.value}` : "/";
               const active =
@@ -151,7 +107,7 @@ export default async function Home({
                 <Link
                   key={menu.label}
                   href={href}
-                  className={`block cursor-pointer rounded-lg px-4 py-3 text-sm ${
+                  className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm ${
                     active
                       ? "bg-blue-600 text-white"
                       : "text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -164,50 +120,26 @@ export default async function Home({
           </nav>
         </aside>
 
-        <section className="flex h-screen min-w-0 flex-1 flex-col p-6">
-          <div className="flex min-h-0 w-full max-w-none flex-1 flex-col">
-            <div className="mb-1 flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-white">
-                  장비 관리 시스템
-                </h1>
-                <p className="mt-2 text-gray-400">
-                  {selectedCategory
-                    ? `${selectedCategory} 장비 목록을 표시합니다.`
-                    : "전체 장비 목록을 표시합니다."}
-                </p>
-              </div>
+        <section className="flex min-w-0 flex-1 flex-col p-3 md:h-screen md:p-6">
+          <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white md:text-3xl">
+                장비 관리 시스템
+              </h1>
 
-              <LogoutButton />
+              <p className="mt-1 text-sm text-gray-400">
+                {selectedCategory
+                  ? `${selectedCategory} 장비 목록`
+                  : "전체 장비 목록"}
+              </p>
             </div>
 
-            <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-7">
-              <Card title="현재 목록" value={equipmentList.length} />
-              <Card title="Server" value={serverCount} />
-              <Card title="Storage" value={storageCount} />
-              <Card title="L2" value={l2Count} />
-              <Card title="L3" value={l3Count} />
-              <Card title="L4" value={l4Count} />
-              <Card title="FW" value={fwCount} />
-            </div>
-
-            <EquipmentTable equipmentList={equipmentList} />
-
-            <p className="mt-4 text-sm text-gray-100">
-              행 클릭 시 장비 수정/삭제 가능합니다.
-            </p>
+            <LogoutButton />
           </div>
+
+          <EquipmentTable equipmentList={equipmentList} />
         </section>
       </div>
     </main>
-  );
-}
-
-function Card({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900 p-2 shadow">
-      <p className="text-sm text-gray-500">{title}</p>
-      <p className="mt-2 text-2xl font-bold text-white">{value}</p>
-    </div>
   );
 }

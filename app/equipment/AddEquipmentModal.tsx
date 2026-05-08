@@ -4,7 +4,7 @@ import { useState } from "react";
 import { addEquipment } from "./actions";
 
 const inputClass =
-  "w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 focus:border-blue-500 focus:outline-none";
+  "w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder:text-[11.5px] focus:border-blue-500 focus:outline-none";
 
 const labelClass = "mb-1 block text-xs text-gray-400";
 
@@ -45,7 +45,12 @@ export default function AddEquipmentModal() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 <div>
                   <label className={labelClass}>No</label>
-                  <input name="no" type="number" className={inputClass} />
+                  <input
+                    name="no"
+                    type="number"
+                    className={inputClass}
+                    placeholder="자동 저장으로 입력하지 마세요"
+                  />
                 </div>
 
                 <div>
@@ -181,12 +186,20 @@ export default function AddEquipmentModal() {
 
                 <div>
                   <label className={labelClass}>Memory</label>
-                  <input name="memory" className={inputClass} />
+                  <input
+                    name="memory"
+                    className={inputClass}
+                    placeholder="예: 32GB(DDR4 4GB * 8ea)"
+                  />
                 </div>
 
                 <div>
                   <label className={labelClass}>DISK</label>
-                  <input name="disk" className={inputClass} />
+                  <input
+                    name="disk"
+                    className={inputClass}
+                    placeholder="예: 600GB(SAS 15K 600GB * 2ea, RAID1, OS)"
+                  />
                 </div>
 
                 <div>
@@ -298,8 +311,8 @@ export default function AddEquipmentModal() {
                   <label className={labelClass}>전원</label>
                   <select name="power" className={inputClass}>
                     <option value="">선택</option>
-                    <option value="ON">ON</option>
-                    <option value="OFF">OFF</option>
+                    <option value="ON">On</option>
+                    <option value="OFF">Off</option>
                   </select>
                 </div>
 
