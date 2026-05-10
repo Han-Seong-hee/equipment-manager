@@ -8,8 +8,12 @@ const inputClass =
 
 const labelClass = "mb-1 block text-xs text-gray-400";
 
-export default function AddEquipmentModal() {
-  const [open, setOpen] = useState(false);
+export default function AddEquipmentModal({
+  system = "NMS",
+}: {
+  system?: string;
+}) {
+  const [open, setOpen] = useState(false);  
 
   return (
     <>
@@ -42,6 +46,8 @@ export default function AddEquipmentModal() {
             </div>
 
             <form action={addEquipment}>
+              <input type="hidden" name="system" value={system} />
+              
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 <div>
                   <label className={labelClass}>No</label>

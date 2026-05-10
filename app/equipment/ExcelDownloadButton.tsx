@@ -4,6 +4,7 @@ import ExcelJS from "exceljs";
 
 type Equipment = {
   no: number | null;
+  system: string | null;
   location: string | null;
   rack: string | null;
   network_center: string | null;

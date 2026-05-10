@@ -5,6 +5,7 @@ import { updateEquipment } from "./actions";
 
 type Equipment = {
   id: string;
+  system: string | null;
   no: number | null;
   location: string | null;
   rack: string | null;
@@ -124,6 +125,7 @@ export default function EditEquipmentModal({
 
             <form action={updateEquipment}>
               <input type="hidden" name="id" value={selectedItem.id} />
+              <input type="hidden" name="system" value={selectedItem.system ?? "NMS"} />
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 <TextInput label="No" name="no" type="number" value={selectedItem.no} />

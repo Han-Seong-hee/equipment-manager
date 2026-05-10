@@ -8,6 +8,7 @@ import ExcelDownloadButton from "./ExcelDownloadButton";
 
 type Equipment = {
   id: string;
+  system: string | null;
   no: number | null;
   location: string | null;
   rack: string | null;
@@ -63,8 +64,10 @@ function calculateUptime(lastBoot: string | null) {
 
 export default function EquipmentTable({
   equipmentList,
+  system = "NMS",
 }: {
   equipmentList: Equipment[];
+  system?: string;
 }) {
   const [selectedId, setSelectedId] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -96,7 +99,7 @@ export default function EquipmentTable({
         />
 
         <div className="flex flex-wrap gap-2">
-          <AddEquipmentModal />
+          <AddEquipmentModal system={system} />
 
           <EditEquipmentModal selectedItem={selectedItem} />
 
