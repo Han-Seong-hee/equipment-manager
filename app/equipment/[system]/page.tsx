@@ -91,9 +91,13 @@ export default async function SystemPage({
     throw new Error("EQUIPMENT_ENCRYPTION_KEY가 설정되지 않았습니다.");
   }
 
-  const { data, error } = await supabase.rpc("get_equipment_decrypted", {
+  const { data, error } = await supabase.rpc(
+  "get_equipment_decrypted",
+  {
     p_key: encryptionKey,
-  });
+    p_system: system,
+  }
+);
 
   if (error) {
     return (
@@ -105,7 +109,7 @@ export default async function SystemPage({
   }
 
   let equipmentList = (data ?? []) as Equipment[];
-    equipmentList = equipmentList.filter((item) => item.system === system);
+
 
   if (selectedCategory) {
     equipmentList = equipmentList.filter(
