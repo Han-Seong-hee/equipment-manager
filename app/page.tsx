@@ -128,7 +128,7 @@ export default async function MainPage() {
             {systems.map((system) => (
               <section
                 key={system.value}
-                className="rounded-2xl border border-gray-800 bg-gray-900/60 p-5"
+                className="rounded-2xl border border-gray-800 bg-gray-900/60 p-3"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <Link
@@ -158,7 +158,7 @@ export default async function MainPage() {
                       <Link
                         key={`${system.value}-${category.label}`}
                         href={href}
-                        className="rounded-xl border border-gray-800 bg-gray-950 p-4 shadow hover:border-blue-500 hover:bg-gray-800"
+                        className="rounded-xl border border-gray-800 bg-gray-950 p-2 shadow hover:border-blue-500 hover:bg-gray-800"
                       >
                         <p className="text-sm text-gray-500">
                           {category.label}
