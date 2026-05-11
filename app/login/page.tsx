@@ -4,6 +4,8 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 
+import Link from "next/link";
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -56,6 +58,14 @@ export default function LoginPage() {
         >
           로그인
         </button>
+        <div className="mt-4 text-center">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-blue-400 hover:text-blue-300"
+          >
+            비밀번호 찾기
+          </Link>
+        </div>
       </form>
     </main>
   );

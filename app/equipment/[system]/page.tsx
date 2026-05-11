@@ -163,7 +163,16 @@ export default async function SystemPage({
                 </p>
               </div>
 
-              <LogoutButton />
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/change-password"
+                  className="rounded-lg bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-600"
+                >
+                  비밀번호 변경
+                </Link>
+
+                <LogoutButton />
+              </div>
             </div>
 
             <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-7">

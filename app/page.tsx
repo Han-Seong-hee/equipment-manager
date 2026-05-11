@@ -121,7 +121,16 @@ export default async function MainPage() {
               </p>
             </div>
 
-            <LogoutButton />
+            <div className="flex items-center gap-2">
+              <Link
+                href="/change-password"
+                className="rounded-lg bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-600"
+              >
+                비밀번호 변경
+              </Link>
+
+              <LogoutButton />
+            </div>
           </div>
 
           <div className="space-y-8">
