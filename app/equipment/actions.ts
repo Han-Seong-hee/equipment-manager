@@ -59,6 +59,7 @@ export async function addEquipment(formData: FormData) {
 
   const { error } = await supabase.rpc("insert_equipment_encrypted", {
     p_key: encryptionKey,
+    p_system: String(formData.get("system") || "NMS"),
     // No 자동 증가는 Supabase SQL 함수에서 처리합니다.
     // Add 화면에서 no를 입력하지 않으면 null 전달 → SQL 함수에서 nextval 처리
     p_no: getNumberOrNull(formData, "no"),
