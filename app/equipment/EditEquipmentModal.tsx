@@ -46,7 +46,7 @@ type Equipment = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 focus:border-blue-500 focus:outline-none";
+  "w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder:text-[11.5px] focus:border-blue-500 focus:outline-none";
 
 const labelClass = "mb-1 block text-xs text-gray-400";
 
@@ -71,7 +71,7 @@ function TextInput({
         type={type}
         defaultValue={value ?? ""}
         placeholder={placeholder}
-        className={`${inputClass} placeholder-gray-500`}
+        className={inputClass}
       />
     </div>
   );
@@ -137,11 +137,29 @@ export default function EditEquipmentModal({
 
                 <div>
                   <label className={labelClass}>분류</label>
-                  <select
-                    name="category"
-                    defaultValue={selectedItem.category ?? ""}
-                    className={inputClass}
-                  >
+                  <select name="type" defaultValue={selectedItem.type ?? ""} className={inputClass}>
+                    <option value="">선택</option>
+                    <option value="BB_NMS">BB_NMS</option>
+                    <option value="BMS">BMS</option>
+                    <option value="IPAS">IPAS</option>
+                    <option value="FACT">FACT</option>
+                    <option value="Finder">Finder</option>
+                    <option value="FlowNMS">FlowNMS</option>
+                    <option value="FOMS">FOMS</option>
+                    <option value="FOMS_DR">FOMS_DR</option>
+                    <option value="PODS">PODS</option>
+                    <option value="RMS">RMS</option>
+                    <option value="RMS_DR">RMS_DR</option>
+                    <option value="SuMS">SuMS</option>
+                    <option value="TACT">TACT</option>
+                    <option value="TEAMS">TEAMS</option>
+                    <option value="가입자단말NTP">가입자단말NTP</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>종류</label>
+                  <select name="category" defaultValue={selectedItem.category ?? ""} className={inputClass}>
                     <option value="">선택</option>
                     <option value="Server">Server</option>
                     <option value="Storage">Storage</option>
@@ -152,8 +170,22 @@ export default function EditEquipmentModal({
                   </select>
                 </div>
 
-                <TextInput label="종류" name="type" value={selectedItem.type} />
-                <TextInput label="Vender" name="vendor" value={selectedItem.vendor} />
+                <div>
+                  <label className={labelClass}>Vender</label>
+                  <select name="vendor" defaultValue={selectedItem.vendor ?? ""} className={inputClass}>
+                    <option value="">선택</option>
+                    <option value="Cisco">Cisco</option>
+                    <option value="Dell">Dell</option>
+                    <option value="Fortinet">Fortinet</option>
+                    <option value="Fujitsu">Fujitsu</option>
+                    <option value="HP">HP</option>
+                    <option value="Juniper">Juniper</option>
+                    <option value="Lenovo">Lenovo</option>
+                    <option value="NetAPP">NetApp</option>
+                    <option value="Supermicro">Supermicro</option>
+                  </select>
+                </div>
+
                 <TextInput label="BP" name="bp" value={selectedItem.bp} />
                 <TextInput label="기종" name="model" value={selectedItem.model} />
                 <TextInput label="S/N" name="serial_number" value={selectedItem.serial_number} />
@@ -165,8 +197,21 @@ export default function EditEquipmentModal({
                 <TextInput label="CPU Model" name="cpu_model" value={selectedItem.cpu_model} />
                 <TextInput label="CPU Socket" name="cpu_socket" value={selectedItem.cpu_socket} />
                 <TextInput label="CPU Core" name="cpu_core" value={selectedItem.cpu_core} />
-                <TextInput label="Memory" name="memory" value={selectedItem.memory} />
-                <TextInput label="DISK" name="disk" value={selectedItem.disk} />
+
+                <TextInput
+                  label="Memory"
+                  name="memory"
+                  value={selectedItem.memory}
+                  placeholder="예: 32GB(DDR4 4GB * 8ea)"
+                />
+
+                <TextInput
+                  label="DISK"
+                  name="disk"
+                  value={selectedItem.disk}
+                  placeholder="예: 600GB(SAS 15K 600GB * 2ea, RAID1, OS)"
+                />
+
                 <TextInput label="ETC" name="etc" value={selectedItem.etc} />
                 <TextInput label="자산번호" name="asset_number" value={selectedItem.asset_number} />
                 <TextInput label="SSR 자산번호" name="ssr_asset_number" value={selectedItem.ssr_asset_number} />
@@ -186,23 +231,58 @@ export default function EditEquipmentModal({
 
                 <div>
                   <label className={labelClass}>상태</label>
-                  <select
-                    name="status"
-                    defaultValue={selectedItem.status ?? ""}
-                    className={inputClass}
-                  >
+                  <select name="status" defaultValue={selectedItem.status ?? ""} className={inputClass}>
                     <option value="">선택</option>
-                    <option value="운영">운영</option>
-                    <option value="점검">점검</option>
-                    <option value="장애">장애</option>
+                    <option value="불용대상">불용대상</option>
+                    <option value="비운용">비운용</option>
                     <option value="예비">예비</option>
-                    <option value="폐기">폐기</option>
+                    <option value="운용">운용</option>
                   </select>
                 </div>
 
-                <TextInput label="HW 관리구분" name="hw_manage_type" value={selectedItem.hw_manage_type} />
-                <TextInput label="OS 관리구분" name="os_manage_type" value={selectedItem.os_manage_type} />
-                <TextInput label="Wty Out" name="warranty_out" value={selectedItem.warranty_out} />
+                <div>
+                  <label className={labelClass}>HW 관리구분</label>
+                  <select
+                    name="hw_manage_type"
+                    defaultValue={selectedItem.hw_manage_type ?? ""}
+                    className={inputClass}
+                  >
+                    <option value="">선택</option>
+                    <option value="NOT">NOT</option>
+                    <option value="MA">MA</option>
+                    <option value="Wth">Wty</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>OS 관리구분</label>
+                  <select
+                    name="os_manage_type"
+                    defaultValue={selectedItem.os_manage_type ?? ""}
+                    className={inputClass}
+                  >
+                    <option value="">선택</option>
+                    <option value="NOT">NOT</option>
+                    <option value="MA">MA</option>
+                    <option value="Wth">Wty</option>
+                  </select>
+                </div>
+
+                <TextInput
+                  label="Wty Out"
+                  name="warranty_out"
+                  value={selectedItem.warranty_out}
+                  placeholder="예: 2026-01-01"
+                />
+
+                <div>
+                  <label className={labelClass}>uptime</label>
+                  <input
+                    disabled
+                    className={inputClass}
+                    placeholder="Last Boot 입력 시 자동 계산"
+                  />
+                </div>
 
                 <TextInput
                   label="Last Boot"
@@ -211,20 +291,11 @@ export default function EditEquipmentModal({
                   placeholder="예: 2026-01-01"
                 />
 
-                <TextInput
-                  label="H/W EoS"
-                  name="hw_eos"
-                  value={selectedItem.hw_eos}
-                  placeholder="예: 2028-12-31"
-                />
+                <TextInput label="H/W EoS" name="hw_eos" value={selectedItem.hw_eos} />
 
                 <div>
                   <label className={labelClass}>불용여부</label>
-                  <select
-                    name="unused"
-                    defaultValue={selectedItem.unused ?? ""}
-                    className={inputClass}
-                  >
+                  <select name="unused" defaultValue={selectedItem.unused ?? ""} className={inputClass}>
                     <option value="">선택</option>
                     <option value="Y">Y</option>
                     <option value="N">N</option>
@@ -246,14 +317,10 @@ export default function EditEquipmentModal({
 
                 <div>
                   <label className={labelClass}>전원</label>
-                  <select
-                    name="power"
-                    defaultValue={selectedItem.power ?? ""}
-                    className={inputClass}
-                  >
+                  <select name="power" defaultValue={selectedItem.power ?? ""} className={inputClass}>
                     <option value="">선택</option>
-                    <option value="ON">ON</option>
-                    <option value="OFF">OFF</option>
+                    <option value="ON">On</option>
+                    <option value="OFF">Off</option>
                   </select>
                 </div>
 
