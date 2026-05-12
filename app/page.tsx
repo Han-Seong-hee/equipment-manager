@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 
 import LogoutButton from "./equipment/LogoutButton";
 
-type Equipment = {
-  id: string;
+type CountData = {
   system: string | null;
   category: string | null;
+  total: number;
 };
 
 const systems = [
@@ -55,15 +55,7 @@ export default async function MainPage() {
     redirect("/login");
   }
 
-  const encryptionKey = process.env.EQUIPMENT_ENCRYPTION_KEY;
-
-  if (!encryptionKey) {
-    throw new Error("EQUIPMENT_ENCRYPTION_KEY가 설정되지 않았습니다.");
-  }
-
-  const { data, error } = await supabase.rpc("get_equipment_decrypted", {
-    p_key: encryptionKey,
-  });
+  const { data, error } = await supabase.rpc("get_equipment_counts");
 
   if (error) {
     return (
@@ -74,15 +66,21 @@ export default async function MainPage() {
     );
   }
 
-  const equipmentList = (data ?? []) as Equipment[];
+  const countList = (data ?? []) as CountData[];
 
   const getCount = (system: string, category?: string) => {
-    return equipmentList.filter((item) => {
-      if (item.system !== system) return false;
-      if (!category) return true;
-      return item.category === category;
-    }).length;
-  };
+  if (!category) {
+    return countList
+      .filter((item) => item.system === system)
+      .reduce((sum, item) => sum + Number(item.total), 0);
+  }
+
+  const item = countList.find(
+    (item) => item.system === system && item.category === category
+  );
+
+  return Number(item?.total ?? 0);
+};
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-200">
