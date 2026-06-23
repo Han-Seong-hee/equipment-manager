@@ -84,6 +84,9 @@ export default function EditEquipmentModal({
 }) {
   const [open, setOpen] = useState(false);
 
+    const currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "/";
+
   const openModal = () => {
     if (!selectedItem) {
       alert("수정할 장비 행을 먼저 선택하세요.");
@@ -124,6 +127,11 @@ export default function EditEquipmentModal({
             </div>
 
             <form action={updateEquipment}>
+              <input
+                type="hidden"
+                name="return_url"
+                value={currentPath}
+              />
               <input type="hidden" name="id" value={selectedItem.id} />
               <input type="hidden" name="system" value={selectedItem.system ?? "NMS"} />
 

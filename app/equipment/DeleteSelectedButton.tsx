@@ -9,6 +9,9 @@ export default function DeleteSelectedButton({
   selectedId: string;
   selectedName: string;
 }) {
+  const currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "/";
+
   return (
     <form
       action={deleteEquipment}
@@ -28,6 +31,7 @@ export default function DeleteSelectedButton({
         }
       }}
     >
+      <input type="hidden" name="return_url" value={currentPath} />
       <input type="hidden" name="id" value={selectedId} />
 
       <button

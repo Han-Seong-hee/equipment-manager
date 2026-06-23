@@ -8,6 +8,11 @@ const inputClass =
 
 const labelClass = "mb-1 block text-xs text-gray-400";
 
+const currentPath =
+  typeof window !== "undefined"
+    ? window.location.pathname
+    : "/";
+
 export default function AddEquipmentModal({
   system = "NMS",
 }: {
@@ -46,6 +51,11 @@ export default function AddEquipmentModal({
             </div>
 
             <form action={addEquipment}>
+              <input
+                type="hidden"
+                name="return_url"
+                value={currentPath}
+              />
               <input type="hidden" name="system" value={system} />
               
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
