@@ -8,7 +8,7 @@ import LogoutButton from "./equipment/LogoutButton";
 
 type CountData = {
   system: string | null;
-  category: string | null;
+  type: string | null;
   total: number;
 };
 
@@ -68,15 +68,15 @@ export default async function MainPage() {
 
   const countList = (data ?? []) as CountData[];
 
-  const getCount = (system: string, category?: string) => {
-  if (!category) {
+  const getCount = (system: string, type?: string) => {
+  if (!type) {
     return countList
       .filter((item) => item.system === system)
       .reduce((sum, item) => sum + Number(item.total), 0);
   }
 
   const item = countList.find(
-    (item) => item.system === system && item.category === category
+    (item) => item.system === system && item.type === type
   );
 
   return Number(item?.total ?? 0);

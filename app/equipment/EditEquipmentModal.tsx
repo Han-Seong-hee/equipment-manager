@@ -145,7 +145,7 @@ export default function EditEquipmentModal({
 
                 <div>
                   <label className={labelClass}>분류</label>
-                  <select name="type" defaultValue={selectedItem.type ?? ""} className={inputClass}>
+                  <select name="category" defaultValue={selectedItem.type ?? ""} className={inputClass}>
                     <option value="">선택</option>
                     <option value="BB_NMS">BB_NMS</option>
                     <option value="BMS">BMS</option>
@@ -167,7 +167,7 @@ export default function EditEquipmentModal({
 
                 <div>
                   <label className={labelClass}>종류</label>
-                  <select name="category" defaultValue={selectedItem.category ?? ""} className={inputClass}>
+                  <select name="type" defaultValue={selectedItem.category ?? ""} className={inputClass}>
                     <option value="">선택</option>
                     <option value="Server">Server</option>
                     <option value="Storage">Storage</option>

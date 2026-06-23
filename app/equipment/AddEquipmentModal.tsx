@@ -106,6 +106,7 @@ export default function AddEquipmentModal({
                     <option value="FlowNMS">FlowNMS</option>
                     <option value="FOMS">FOMS</option>
                     <option value="FOMS_DR">FOMS_DR</option>
+                    <option value="iVMS">iVMS</option>
                     <option value="PODS">PODS</option>
                     <option value="RMS">RMS</option>
                     <option value="RMS_DR">RMS_DR</option>
