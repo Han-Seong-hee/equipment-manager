@@ -122,7 +122,7 @@ export default function EquipmentTable({
               <th className="px-3 py-3 text-left">Rack</th>
               <th className="px-3 py-3 text-left">Network 센터</th>
               <th className="px-3 py-3 text-left">운용팀</th>
-              <th className="px-3 py-3 text-left">담당자</th>
+              <th className="w-[120px] px-2 py-3 text-left"> 담당자</th>
               <th className="px-3 py-3 text-left">분류</th>
               <th className="px-3 py-3 text-left">종류</th>
               <th className="px-3 py-3 text-left">Vendor</th>

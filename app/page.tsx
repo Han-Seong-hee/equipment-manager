@@ -19,7 +19,7 @@ const systems = [
   { label: "NMS", value: "NMS" },
 ];
 
-const categories = [
+const equipmentTypes = [
   { label: "전체", value: "" },
   { label: "Server", value: "Server" },
   { label: "Storage", value: "Storage" },
@@ -69,18 +69,18 @@ export default async function MainPage() {
   const countList = (data ?? []) as CountData[];
 
   const getCount = (system: string, type?: string) => {
-  if (!type) {
-    return countList
-      .filter((item) => item.system === system)
-      .reduce((sum, item) => sum + Number(item.total), 0);
-  }
+    if (!type) {
+      return countList
+        .filter((item) => item.system === system)
+        .reduce((sum, item) => sum + Number(item.total), 0);
+    }
 
-  const item = countList.find(
-    (item) => item.system === system && item.type === type
-  );
+    const item = countList.find(
+      (item) => item.system === system && item.type === type
+    );
 
-  return Number(item?.total ?? 0);
-};
+    return Number(item?.total ?? 0);
+  };
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-200">
@@ -154,22 +154,22 @@ export default async function MainPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7">
-                  {categories.map((category) => {
-                    const count = getCount(system.value, category.value);
+                  {equipmentTypes.map((equipmentType) => {
+                    const count = getCount(system.value, equipmentType.value);
 
-                    const href = category.value
-                      ? `/equipment/${system.value}/${category.value}`
+                    const href = equipmentType.value
+                      ? `/equipment/${system.value}/${equipmentType.value}`
                       : `/equipment/${system.value}`;
 
                     return (
                       <Link
-                        key={`${system.value}-${category.label}`}
+                        key={`${system.value}-${equipmentType.label}}`}
                         href={href}
                         className="rounded-xl border border-gray-800 bg-gray-950 p-2 shadow hover:border-blue-500 hover:bg-gray-800"
                       >
-                        <p className="text-sm text-gray-500">
-                          {category.label}
-                        </p>
+                       <p className="text-sm text-gray-500">
+                        {equipmentType.label}
+                      </p>
                         <p className="mt-2 text-2xl font-bold text-white">
                           {count}
                         </p>
